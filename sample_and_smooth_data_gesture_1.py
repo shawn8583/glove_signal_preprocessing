@@ -10,7 +10,10 @@ from sklearn.preprocessing import PolynomialFeatures
 
 filename_1 = '/home/shawn/ros_ws/src/robot_skin/icra_glove/data/training_sets_200s_whole_csv/1_luo/1.csv'
 
-# very simple plotting of the original data
+# Reference and Tutorial about the Sampling and Smoothing methods this script implemented:
+# https://github.com/mGalarnyk/Python_Tutorials/blob/master/Time_Series/Part1_Time_Series_Data_BasicPlotting.ipynb
+
+# Very simple plotting of the original data
 raw_data = pd.read_csv('/home/shawn/ros_ws/src/robot_skin/icra_glove/data/code_test_data.csv', sep=',', names=['data0','data1','data2','data3','data4','data5','data6','data7','data8','data9','data10','data11'])
 raw_data['sequence'] = range(0, len(raw_data.index.values))
 print raw_data.head()
