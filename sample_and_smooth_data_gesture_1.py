@@ -68,6 +68,20 @@ ax.legend(loc='lower right')
 plt.show()
 
 
+# Linear Regression
+# Keeps having problem saying that "Reshape your data either using array.reshape(-1, 1) if your data has a single feature or array.reshape(1, -1) if it contains a single sample."
+# raw_data = raw_data[(raw_data['sequence'] >= 800) & (raw_data['sequence'] <= 1200)]
+raw_data = raw_data.sort_values(by=['sequence'], ascending=[True])
+raw_data.head()
+model = LinearRegression().fit(raw_data[['sequence']], raw_data[['Rolling_Mean']])
+m = model.coef_[0]
+b = model.intercept_
+print 'y = ', round(m[0], 2), 'x +', round(b[0], 2)
+predictions = model.predict(raw_data.data0)
+predictions[0:5]
+predictions = pd.DataFrame(data = predictions, index = raw_data.index.values, columns = ['Pred'])
+print predictions.head()
+
 
 # ----------------------------------------------------------------------------------------------------------
 # Another way to read and plot csv files using "import csv", but it's way more complicated than pandas
