@@ -16,7 +16,6 @@ filename_1 = '/home/shawn/ros_ws/src/robot_skin/icra_glove/data/training_sets_20
 # Very simple plotting of the original data
 raw_data = pd.read_csv('/home/shawn/ros_ws/src/robot_skin/icra_glove/data/code_test_data.csv', sep=',', names=['data0','data1','data2','data3','data4','data5','data6','data7','data8','data9','data10','data11'])
 raw_data['sequence'] = range(0, len(raw_data.index.values))
-print raw_data.head()
 fig = plt.figure(1)
 ax1 = fig.add_subplot(111)
 ax1.set_xlabel('time sequence')
@@ -27,7 +26,7 @@ plt.show()
 
 # Sampling 1/10th of the Data
 one_tenth = raw_data.sample(frac = .1, random_state=np.random.randint(10))
-print one_tenth.head()
+# print one_tenth.head()
 
 # Reordering by time sequence and plot sampled data
 one_tenth.index.name = None
@@ -59,10 +58,15 @@ raw_data['Rolling_Mean9'] = raw_data['data9'].rolling(window = 40).mean()
 raw_data['Rolling_Mean10'] = raw_data['data10'].rolling(window = 40).mean() 
 raw_data['Rolling_Mean11'] = raw_data['data11'].rolling(window = 40).mean() 
 
-raw_data_without_fist_100_rows = raw_data.drop(raw_data.index[0,100,1])
-print raw_data.head()
-print raw_data.tail()
-print raw_data_without_fist_100_rows.head()
+drop = []  # there seems to have the first 40 rows of NaN values in Rolling_Mean* columns that needed to be dropped for sklearn function
+for i in range(0, 40):
+   drop.append(i)
+# print drop
+smoothed_data_dropped_NaN = raw_data.drop(drop)
+smoothed_data_dropped_NaN.to_csv('after_rolling_window.csv', header=True)
+print "---------------------------------------------- first 5 rows of raw_data -----------------------------------------------\n", raw_data.head(), "\n"
+print "---------------------------------------------- last 5 rows of raw_data -----------------------------------------------\n", raw_data.tail(), "\n"
+print "----------------------------------------------- first 5 rows of smoothed_data that have dropped first 40 rows of NaN -----------------------------------------------\n", smoothed_data_dropped_NaN.head(), "\n"
 
 fig, axes = plt.subplots(nrows = 1, ncols = 3, figsize  = (15, 5))
 axes[0].plot(raw_data.sequence, raw_data.data0)
@@ -74,7 +78,7 @@ axes[2].set_title('Smoothed (Rolling_Mean)')
 plt.show()
 
 # Plot all 12 taxel data after implemented Sampling and Rolling Mean Smoothing Method
-x_train = np.array([raw_data.Rolling_Mean0, raw_data.Rolling_Mean1, raw_data.Rolling_Mean2, raw_data.Rolling_Mean3, raw_data.Rolling_Mean4, raw_data.Rolling_Mean5, raw_data.Rolling_Mean6, raw_data.Rolling_Mean7, raw_data.Rolling_Mean8, raw_data.Rolling_Mean9, raw_data.Rolling_Mean10, raw_data.Rolling_Mean11])
+x_train = np.array([smoothed_data_dropped_NaN.Rolling_Mean0, smoothed_data_dropped_NaN.Rolling_Mean1, smoothed_data_dropped_NaN.Rolling_Mean2, smoothed_data_dropped_NaN.Rolling_Mean3, smoothed_data_dropped_NaN.Rolling_Mean4, smoothed_data_dropped_NaN.Rolling_Mean5, smoothed_data_dropped_NaN.Rolling_Mean6, smoothed_data_dropped_NaN.Rolling_Mean7, smoothed_data_dropped_NaN.Rolling_Mean8, smoothed_data_dropped_NaN.Rolling_Mean9, smoothed_data_dropped_NaN.Rolling_Mean10, smoothed_data_dropped_NaN.Rolling_Mean11])
 x_scaled = preprocessing.scale(x_train)
 
 fig_all_12 = plt.figure(2)
@@ -82,18 +86,18 @@ ax1_12 = fig_all_12.add_subplot(111)
 ax1_12.set_xlabel('time sequence')
 ax1_12.set_ylabel('taxel values')
 ax1_12.set_title('gesture_1 with all 12 signals')
-ax1_12.plot(raw_data.sequence, x_train[0], label='taxel0')
-ax1_12.plot(raw_data.sequence, x_train[1], label='taxel1')
-ax1_12.plot(raw_data.sequence, x_train[2], label='taxel2')
-ax1_12.plot(raw_data.sequence, x_train[3], label='taxel3')
-ax1_12.plot(raw_data.sequence, x_train[4], label='taxel4')
-ax1_12.plot(raw_data.sequence, x_train[5], label='taxel5')
-ax1_12.plot(raw_data.sequence, x_train[6], label='taxel6')
-ax1_12.plot(raw_data.sequence, x_train[7], label='taxel7')
-ax1_12.plot(raw_data.sequence, x_train[8], label='taxel8')
-ax1_12.plot(raw_data.sequence, x_train[9], label='taxel9')
-ax1_12.plot(raw_data.sequence, x_train[10], label='taxel10')
-ax1_12.plot(raw_data.sequence, x_train[11], label='taxel11')
+ax1_12.plot(smoothed_data_dropped_NaN.sequence, x_scaled[0], label='taxel0')
+ax1_12.plot(smoothed_data_dropped_NaN.sequence, x_scaled[1], label='taxel1')
+ax1_12.plot(smoothed_data_dropped_NaN.sequence, x_scaled[2], label='taxel2')
+ax1_12.plot(smoothed_data_dropped_NaN.sequence, x_scaled[3], label='taxel3')
+ax1_12.plot(smoothed_data_dropped_NaN.sequence, x_scaled[4], label='taxel4')
+ax1_12.plot(smoothed_data_dropped_NaN.sequence, x_scaled[5], label='taxel5')
+ax1_12.plot(smoothed_data_dropped_NaN.sequence, x_scaled[6], label='taxel6')
+ax1_12.plot(smoothed_data_dropped_NaN.sequence, x_scaled[7], label='taxel7')
+ax1_12.plot(smoothed_data_dropped_NaN.sequence, x_scaled[8], label='taxel8')
+ax1_12.plot(smoothed_data_dropped_NaN.sequence, x_scaled[9], label='taxel9')
+ax1_12.plot(smoothed_data_dropped_NaN.sequence, x_scaled[10], label='taxel10')
+ax1_12.plot(smoothed_data_dropped_NaN.sequence, x_scaled[11], label='taxel11')
 plt.show()
 
 # Plotting Original Data and Smoothed Data on Same Plot
