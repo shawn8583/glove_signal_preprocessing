@@ -63,7 +63,6 @@ for i in range(0, 40):
    drop.append(i)
 # print drop
 smoothed_data_dropped_NaN = raw_data.drop(drop)
-smoothed_data_dropped_NaN.to_csv('after_rolling_window.csv', header=True)
 print "---------------------------------------------- first 5 rows of raw_data -----------------------------------------------\n", raw_data.head(), "\n"
 print "---------------------------------------------- last 5 rows of raw_data -----------------------------------------------\n", raw_data.tail(), "\n"
 print "----------------------------------------------- first 5 rows of smoothed_data that have dropped first 40 rows of NaN -----------------------------------------------\n", smoothed_data_dropped_NaN.head(), "\n"
